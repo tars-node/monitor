@@ -1,0 +1,28 @@
+{
+  "name": "@tars/monitor",
+  "version": "1.0.0",
+  "description": "TARS 框架中用于 Node.js 的服务监控、特性监控上报",
+  "author": {
+    "name": "Superzheng",
+    "email": "superzheng@tencent.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://git.code.oa.com/taf/taf-monitor.git"
+  },
+  "homepage": "http://git.oa.com/taf/taf-monitor/",
+  "bugs": {
+    "url": "http://git.oa.com/taf/taf-monitor/issues"
+  },
+  "keywords": [
+    "monitor",
+    "node",
+    "tars"
+  ],
+  "dependencies" : {
+    "@tars/stream" : "latest",
+    "@tars/rpc": "^1.0.0",
+    "@tars/config-parser" : "latest"
+  },
+  "license" : "BSD-3-Clause"
+}

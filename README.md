@@ -16,7 +16,7 @@ __如果服务通过 [node-agent](http://git.oa.com/tars/node-agent/tree/master 
 
 初始化是通过调用特定模块的 `init(data)` 方法实现。
 
-__data__: 可以为 tars配置文件路径 或 已配置的 `@tars/config-parser` 实例。
+__data__: 可以为 tars配置文件路径 或 已配置的 `(@tars/utils).Config` 实例。
 
 ## 服务监控（stat）
 

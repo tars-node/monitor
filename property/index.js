@@ -19,7 +19,7 @@
 var assert = require('assert');
 
 var TarsClient = require('@tars/rpc').Communicator.New();
-var TarsConfigure = require('@tars/config-parser');
+var TarsConfigure = require('@tars/utils').Config;
 var TarsStream = require('@tars/stream');
 
 var PropertyF = require('./PropertyFProxy');

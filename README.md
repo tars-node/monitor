@@ -12,7 +12,7 @@
 
 ## 初始化
 
-__如果服务通过 [node-agent](http://git.oa.com/tars/node-agent/tree/master "node-agent") （或在TARS平台）运行，则无需执行该方法。__
+__如果服务通过 [node-agent](https://github.com/tars-node/node-agent "node-agent") （或在TARS平台）运行，则无需执行该方法。__
 
 初始化是通过调用特定模块的 `init(data)` 方法实现。
 
@@ -30,8 +30,8 @@ var stat = require('@tars/monitor').stat;
 
 已集成的模块如下：  
 
-* TUP Client & Server 由 [@tars/rpc](http://git.oa.com/tars/rpc/tree/master "@tars/rpc") 进行上报。  
-* HTTP(S) Server 由 [node-agent](http://git.oa.com/tars/node-agent/tree/master "node-agent") 进行上报	，但由于 `HTTP(S)` 协议的特性所以：  
+* TUP Client & Server 由 [@tars/rpc](https://github.com/tars-node/rpc "@tars/rpc") 进行上报。  
+* HTTP(S) Server 由 [node-agent](https://github.com/tars-node/node-agent "node-agent") 进行上报	，但由于 `HTTP(S)` 协议的特性所以：  
 	* 不统计超时的调用量，所有请求的超时上报为 0。
 	* [response.statusCode >= 400](http://www.nodejs.org/api/http.html#http_response_statuscode "http_response_statuscode") 为失败调用，否则为成功调用。
 

@@ -18,7 +18,7 @@
 
 var assert = require('assert');
 
-var TarsClient = require('@tars/rpc').Communicator.New();
+var TarsRpc = require('@tars/rpc');
 var TarsConfigure = require('@tars/utils').Config;
 var TarsStream = require('@tars/stream');
 
@@ -125,7 +125,7 @@ var task = function() {
 	};
 
 	if (!client) {
-		client = TarsClient.stringToProxy(StatF.tars.StatFProxy, exports.StatObj);
+		client = TarsRpc.client.stringToProxy(StatF.tars.StatFProxy, exports.StatObj);
 	}
 
 	Object.getOwnPropertyNames(data).forEach(function(key) {
@@ -155,7 +155,7 @@ exports.init = function(obj) {
 
 	if (obj) {
 		if (typeof obj === 'string') {
-			TarsClient.initialize(obj);
+			TarsRpc.client.initialize(obj);
 			TarsConfig = new TarsConfigure();
 			TarsConfig.parseFile(obj);
 			obj = TarsConfig.json;

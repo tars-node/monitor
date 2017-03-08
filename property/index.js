@@ -18,7 +18,7 @@
 
 var assert = require('assert');
 
-var TarsClient = require('@tars/rpc').Communicator.New();
+var TarsRpc = require('@tars/rpc');
 var TarsConfigure = require('@tars/utils').Config;
 var TarsStream = require('@tars/stream');
 
@@ -76,7 +76,7 @@ var task = function() {
 	var statmsg = new TarsStream.Map(PropertyF.tars.StatPropMsgHead, PropertyF.tars.StatPropMsgBody);
 
 	if (!client) {
-		client = TarsClient.stringToProxy(PropertyF.tars.PropertyFProxy, exports.PropertyObj);
+		client = TarsRpc.client.stringToProxy(PropertyF.tars.PropertyFProxy, exports.PropertyObj);
 	}
 
 	Object.getOwnPropertyNames(data).map(function(key) {
@@ -101,7 +101,7 @@ var init = function(obj) {
 	assert(obj, 'TARS_CONFIG is not in env and init argument is neither an Object nor a String.');
 	
 	if (typeof obj === 'string' && obj !== '') {
-		TarsClient.initialize(obj);
+		TarsRpc.client.initialize(obj);
 		tarsConfig = new TarsConfigure();
 		tarsConfig.parseFile(obj);
 	} else {

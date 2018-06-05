@@ -14,8 +14,11 @@
  * specific language governing permissions and limitations under the License.
  */
 
-var TarsStream = require('@tars/stream');
-var TarsError  = require('@tars/rpc').error;
+"use strict";
+
+var assert    = require("assert");
+var TarsStream = require("@tars/stream");
+var TarsError  = require("@tars/rpc").error;
 
 var tars = tars || {};
 module.exports.tars = tars;
@@ -23,15 +26,15 @@ module.exports.tars = tars;
 tars.StatFProxy = function () {
     this._name   = undefined;
     this._worker = undefined;
-}
+};
 
 tars.StatFProxy.prototype.setTimeout = function (iTimeout) {
     this._worker.timeout = iTimeout;
-}
+};
 
-tars.StatFProxy.prototype.getTimeout = function ( ) {
+tars.StatFProxy.prototype.getTimeout = function () {
     return this._worker.timeout;
-}
+};
 
 
 tars.StatMicMsgHead = function() {
@@ -49,9 +52,8 @@ tars.StatMicMsgHead = function() {
     this._classname = "tars.StatMicMsgHead";
 };
 tars.StatMicMsgHead._classname = "tars.StatMicMsgHead";
-
-tars.StatMicMsgHead._write = function (os, tag, value) { os.writeStruct(tag, value); }
-tars.StatMicMsgHead._read  = function (is, tag, def) { return is.readStruct(tag, true, def); }
+tars.StatMicMsgHead._write = function (os, tag, value) { os.writeStruct(tag, value); };
+tars.StatMicMsgHead._read  = function (is, tag, def) { return is.readStruct(tag, true, def); };
 tars.StatMicMsgHead._readFrom = function (is) {
     var tmp = new tars.StatMicMsgHead();
     tmp.masterName = is.readString(0, true, "");
@@ -92,54 +94,53 @@ tars.StatMicMsgHead.prototype._equal = function (anItem) {
         this.slaveSetArea === anItem.slaveSetArea && 
         this.slaveSetID === anItem.slaveSetID && 
         this.tarsVersion === anItem.tarsVersion;
-}
+};
 tars.StatMicMsgHead.prototype._genKey = function () {
     if (!this._proto_struct_name_) {
-        this._proto_struct_name_ = 'STRUCT' + Math.random();
+        this._proto_struct_name_ = "STRUCT" + Math.random();
     }
     return this._proto_struct_name_;
-}
+};
 tars.StatMicMsgHead.prototype.toObject = function() { 
-    var tmp = {};
-
-    tmp.masterName = this.masterName;
-    tmp.slaveName = this.slaveName;
-    tmp.interfaceName = this.interfaceName;
-    tmp.masterIp = this.masterIp;
-    tmp.slaveIp = this.slaveIp;
-    tmp.slavePort = this.slavePort;
-    tmp.returnValue = this.returnValue;
-    tmp.slaveSetName = this.slaveSetName;
-    tmp.slaveSetArea = this.slaveSetArea;
-    tmp.slaveSetID = this.slaveSetID;
-    tmp.tarsVersion = this.tarsVersion;
-    
-    return tmp;
-}
+    return {
+        "masterName" : this.masterName,
+        "slaveName" : this.slaveName,
+        "interfaceName" : this.interfaceName,
+        "masterIp" : this.masterIp,
+        "slaveIp" : this.slaveIp,
+        "slavePort" : this.slavePort,
+        "returnValue" : this.returnValue,
+        "slaveSetName" : this.slaveSetName,
+        "slaveSetArea" : this.slaveSetArea,
+        "slaveSetID" : this.slaveSetID,
+        "tarsVersion" : this.tarsVersion
+    };
+};
 tars.StatMicMsgHead.prototype.readFromObject = function(json) { 
-    !json.hasOwnProperty("masterName") || (this.masterName = json.masterName);
-    !json.hasOwnProperty("slaveName") || (this.slaveName = json.slaveName);
-    !json.hasOwnProperty("interfaceName") || (this.interfaceName = json.interfaceName);
-    !json.hasOwnProperty("masterIp") || (this.masterIp = json.masterIp);
-    !json.hasOwnProperty("slaveIp") || (this.slaveIp = json.slaveIp);
-    !json.hasOwnProperty("slavePort") || (this.slavePort = json.slavePort);
-    !json.hasOwnProperty("returnValue") || (this.returnValue = json.returnValue);
-    !json.hasOwnProperty("slaveSetName") || (this.slaveSetName = json.slaveSetName);
-    !json.hasOwnProperty("slaveSetArea") || (this.slaveSetArea = json.slaveSetArea);
-    !json.hasOwnProperty("slaveSetID") || (this.slaveSetID = json.slaveSetID);
-    !json.hasOwnProperty("tarsVersion") || (this.tarsVersion = json.tarsVersion);
-}
+    json.hasOwnProperty("masterName") && (this.masterName = json.masterName);
+    json.hasOwnProperty("slaveName") && (this.slaveName = json.slaveName);
+    json.hasOwnProperty("interfaceName") && (this.interfaceName = json.interfaceName);
+    json.hasOwnProperty("masterIp") && (this.masterIp = json.masterIp);
+    json.hasOwnProperty("slaveIp") && (this.slaveIp = json.slaveIp);
+    json.hasOwnProperty("slavePort") && (this.slavePort = json.slavePort);
+    json.hasOwnProperty("returnValue") && (this.returnValue = json.returnValue);
+    json.hasOwnProperty("slaveSetName") && (this.slaveSetName = json.slaveSetName);
+    json.hasOwnProperty("slaveSetArea") && (this.slaveSetArea = json.slaveSetArea);
+    json.hasOwnProperty("slaveSetID") && (this.slaveSetID = json.slaveSetID);
+    json.hasOwnProperty("tarsVersion") && (this.tarsVersion = json.tarsVersion);
+};
 tars.StatMicMsgHead.prototype.toBinBuffer = function () {
-    var os = new TarsStream.OutputStream();
+    var os = new TarsStream.TarsOutputStream();
     this._writeTo(os);
     return os.getBinBuffer();
-}
+};
 tars.StatMicMsgHead.new = function () {
     return new tars.StatMicMsgHead();
-}
+};
 tars.StatMicMsgHead.create = function (is) {
     return tars.StatMicMsgHead._readFrom(is);
-}
+};
+
 tars.StatMicMsgBody = function() {
     this.count = 0;
     this.timeoutCount = 0;
@@ -151,9 +152,8 @@ tars.StatMicMsgBody = function() {
     this._classname = "tars.StatMicMsgBody";
 };
 tars.StatMicMsgBody._classname = "tars.StatMicMsgBody";
-
-tars.StatMicMsgBody._write = function (os, tag, value) { os.writeStruct(tag, value); }
-tars.StatMicMsgBody._read  = function (is, tag, def) { return is.readStruct(tag, true, def); }
+tars.StatMicMsgBody._write = function (os, tag, value) { os.writeStruct(tag, value); };
+tars.StatMicMsgBody._read  = function (is, tag, def) { return is.readStruct(tag, true, def); };
 tars.StatMicMsgBody._readFrom = function (is) {
     var tmp = new tars.StatMicMsgBody();
     tmp.count = is.readInt32(0, true, 0);
@@ -174,48 +174,47 @@ tars.StatMicMsgBody.prototype._writeTo = function (os) {
     os.writeInt32(5, this.maxRspTime);
     os.writeInt32(6, this.minRspTime);
 };
-tars.StatMicMsgBody.prototype._equal = function (anItem) {
-    assert(false, 'this structure not define key operation');
-}
+tars.StatMicMsgBody.prototype._equal = function () {
+    assert.fail("this structure not define key operation");
+};
 tars.StatMicMsgBody.prototype._genKey = function () {
     if (!this._proto_struct_name_) {
-        this._proto_struct_name_ = 'STRUCT' + Math.random();
+        this._proto_struct_name_ = "STRUCT" + Math.random();
     }
     return this._proto_struct_name_;
-}
+};
 tars.StatMicMsgBody.prototype.toObject = function() { 
-    var tmp = {};
-
-    tmp.count = this.count;
-    tmp.timeoutCount = this.timeoutCount;
-    tmp.execCount = this.execCount;
-    tmp.intervalCount = this.intervalCount.toObject();
-    tmp.totalRspTime = this.totalRspTime;
-    tmp.maxRspTime = this.maxRspTime;
-    tmp.minRspTime = this.minRspTime;
-    
-    return tmp;
-}
+    return {
+        "count" : this.count,
+        "timeoutCount" : this.timeoutCount,
+        "execCount" : this.execCount,
+        "intervalCount" : this.intervalCount.toObject(),
+        "totalRspTime" : this.totalRspTime,
+        "maxRspTime" : this.maxRspTime,
+        "minRspTime" : this.minRspTime
+    };
+};
 tars.StatMicMsgBody.prototype.readFromObject = function(json) { 
-    !json.hasOwnProperty("count") || (this.count = json.count);
-    !json.hasOwnProperty("timeoutCount") || (this.timeoutCount = json.timeoutCount);
-    !json.hasOwnProperty("execCount") || (this.execCount = json.execCount);
-    !json.hasOwnProperty("intervalCount") || (this.intervalCount.readFromObject(json.intervalCount));
-    !json.hasOwnProperty("totalRspTime") || (this.totalRspTime = json.totalRspTime);
-    !json.hasOwnProperty("maxRspTime") || (this.maxRspTime = json.maxRspTime);
-    !json.hasOwnProperty("minRspTime") || (this.minRspTime = json.minRspTime);
-}
+    json.hasOwnProperty("count") && (this.count = json.count);
+    json.hasOwnProperty("timeoutCount") && (this.timeoutCount = json.timeoutCount);
+    json.hasOwnProperty("execCount") && (this.execCount = json.execCount);
+    json.hasOwnProperty("intervalCount") && (this.intervalCount.readFromObject(json.intervalCount));
+    json.hasOwnProperty("totalRspTime") && (this.totalRspTime = json.totalRspTime);
+    json.hasOwnProperty("maxRspTime") && (this.maxRspTime = json.maxRspTime);
+    json.hasOwnProperty("minRspTime") && (this.minRspTime = json.minRspTime);
+};
 tars.StatMicMsgBody.prototype.toBinBuffer = function () {
-    var os = new TarsStream.OutputStream();
+    var os = new TarsStream.TarsOutputStream();
     this._writeTo(os);
     return os.getBinBuffer();
-}
+};
 tars.StatMicMsgBody.new = function () {
     return new tars.StatMicMsgBody();
-}
+};
 tars.StatMicMsgBody.create = function (is) {
     return tars.StatMicMsgBody._readFrom(is);
-}
+};
+
 tars.StatSampleMsg = function() {
     this.unid = "";
     this.masterName = "";
@@ -229,9 +228,8 @@ tars.StatSampleMsg = function() {
     this._classname = "tars.StatSampleMsg";
 };
 tars.StatSampleMsg._classname = "tars.StatSampleMsg";
-
-tars.StatSampleMsg._write = function (os, tag, value) { os.writeStruct(tag, value); }
-tars.StatSampleMsg._read  = function (is, tag, def) { return is.readStruct(tag, true, def); }
+tars.StatSampleMsg._write = function (os, tag, value) { os.writeStruct(tag, value); };
+tars.StatSampleMsg._read  = function (is, tag, def) { return is.readStruct(tag, true, def); };
 tars.StatSampleMsg._readFrom = function (is) {
     var tmp = new tars.StatSampleMsg();
     tmp.unid = is.readString(0, true, "");
@@ -256,60 +254,58 @@ tars.StatSampleMsg.prototype._writeTo = function (os) {
     os.writeInt32(7, this.width);
     os.writeInt32(8, this.parentWidth);
 };
-tars.StatSampleMsg.prototype._equal = function (anItem) {
-    assert(false, 'this structure not define key operation');
-}
+tars.StatSampleMsg.prototype._equal = function () {
+    assert.fail("this structure not define key operation");
+};
 tars.StatSampleMsg.prototype._genKey = function () {
     if (!this._proto_struct_name_) {
-        this._proto_struct_name_ = 'STRUCT' + Math.random();
+        this._proto_struct_name_ = "STRUCT" + Math.random();
     }
     return this._proto_struct_name_;
-}
+};
 tars.StatSampleMsg.prototype.toObject = function() { 
-    var tmp = {};
-
-    tmp.unid = this.unid;
-    tmp.masterName = this.masterName;
-    tmp.slaveName = this.slaveName;
-    tmp.interfaceName = this.interfaceName;
-    tmp.masterIp = this.masterIp;
-    tmp.slaveIp = this.slaveIp;
-    tmp.depth = this.depth;
-    tmp.width = this.width;
-    tmp.parentWidth = this.parentWidth;
-    
-    return tmp;
-}
+    return {
+        "unid" : this.unid,
+        "masterName" : this.masterName,
+        "slaveName" : this.slaveName,
+        "interfaceName" : this.interfaceName,
+        "masterIp" : this.masterIp,
+        "slaveIp" : this.slaveIp,
+        "depth" : this.depth,
+        "width" : this.width,
+        "parentWidth" : this.parentWidth
+    };
+};
 tars.StatSampleMsg.prototype.readFromObject = function(json) { 
-    !json.hasOwnProperty("unid") || (this.unid = json.unid);
-    !json.hasOwnProperty("masterName") || (this.masterName = json.masterName);
-    !json.hasOwnProperty("slaveName") || (this.slaveName = json.slaveName);
-    !json.hasOwnProperty("interfaceName") || (this.interfaceName = json.interfaceName);
-    !json.hasOwnProperty("masterIp") || (this.masterIp = json.masterIp);
-    !json.hasOwnProperty("slaveIp") || (this.slaveIp = json.slaveIp);
-    !json.hasOwnProperty("depth") || (this.depth = json.depth);
-    !json.hasOwnProperty("width") || (this.width = json.width);
-    !json.hasOwnProperty("parentWidth") || (this.parentWidth = json.parentWidth);
-}
+    json.hasOwnProperty("unid") && (this.unid = json.unid);
+    json.hasOwnProperty("masterName") && (this.masterName = json.masterName);
+    json.hasOwnProperty("slaveName") && (this.slaveName = json.slaveName);
+    json.hasOwnProperty("interfaceName") && (this.interfaceName = json.interfaceName);
+    json.hasOwnProperty("masterIp") && (this.masterIp = json.masterIp);
+    json.hasOwnProperty("slaveIp") && (this.slaveIp = json.slaveIp);
+    json.hasOwnProperty("depth") && (this.depth = json.depth);
+    json.hasOwnProperty("width") && (this.width = json.width);
+    json.hasOwnProperty("parentWidth") && (this.parentWidth = json.parentWidth);
+};
 tars.StatSampleMsg.prototype.toBinBuffer = function () {
-    var os = new TarsStream.OutputStream();
+    var os = new TarsStream.TarsOutputStream();
     this._writeTo(os);
     return os.getBinBuffer();
-}
+};
 tars.StatSampleMsg.new = function () {
     return new tars.StatSampleMsg();
-}
+};
 tars.StatSampleMsg.create = function (is) {
     return tars.StatSampleMsg._readFrom(is);
-}
+};
+
 tars.ProxyInfo = function() {
     this.bFromClient = true;
     this._classname = "tars.ProxyInfo";
 };
 tars.ProxyInfo._classname = "tars.ProxyInfo";
-
-tars.ProxyInfo._write = function (os, tag, value) { os.writeStruct(tag, value); }
-tars.ProxyInfo._read  = function (is, tag, def) { return is.readStruct(tag, true, def); }
+tars.ProxyInfo._write = function (os, tag, value) { os.writeStruct(tag, value); };
+tars.ProxyInfo._read  = function (is, tag, def) { return is.readStruct(tag, true, def); };
 tars.ProxyInfo._readFrom = function (is) {
     var tmp = new tars.ProxyInfo();
     tmp.bFromClient = is.readBoolean(0, true, true);
@@ -318,113 +314,124 @@ tars.ProxyInfo._readFrom = function (is) {
 tars.ProxyInfo.prototype._writeTo = function (os) {
     os.writeBoolean(0, this.bFromClient);
 };
-tars.ProxyInfo.prototype._equal = function (anItem) {
-    assert(false, 'this structure not define key operation');
-}
+tars.ProxyInfo.prototype._equal = function () {
+    assert.fail("this structure not define key operation");
+};
 tars.ProxyInfo.prototype._genKey = function () {
     if (!this._proto_struct_name_) {
-        this._proto_struct_name_ = 'STRUCT' + Math.random();
+        this._proto_struct_name_ = "STRUCT" + Math.random();
     }
     return this._proto_struct_name_;
-}
+};
 tars.ProxyInfo.prototype.toObject = function() { 
-    var tmp = {};
-
-    tmp.bFromClient = this.bFromClient;
-    
-    return tmp;
-}
+    return {
+        "bFromClient" : this.bFromClient
+    };
+};
 tars.ProxyInfo.prototype.readFromObject = function(json) { 
-    !json.hasOwnProperty("bFromClient") || (this.bFromClient = json.bFromClient);
-}
+    json.hasOwnProperty("bFromClient") && (this.bFromClient = json.bFromClient);
+};
 tars.ProxyInfo.prototype.toBinBuffer = function () {
-    var os = new TarsStream.OutputStream();
+    var os = new TarsStream.TarsOutputStream();
     this._writeTo(os);
     return os.getBinBuffer();
-}
+};
 tars.ProxyInfo.new = function () {
     return new tars.ProxyInfo();
-}
+};
 tars.ProxyInfo.create = function (is) {
     return tars.ProxyInfo._readFrom(is);
-}
+};
+
+
+var __tars_StatF$reportMicMsg$EN = function (msg, bFromClient) {
+    var os = new TarsStream.TarsOutputStream();
+    os.writeMap(1, msg);
+    os.writeBoolean(2, bFromClient);
+    return os.getBinBuffer();
+};
+
+var __tars_StatF$reportMicMsg$DE = function (data) {
+    try {
+        var is = new TarsStream.TarsInputStream(data.response.sBuffer);
+        return {
+            "request" : data.request,
+            "response" : {
+                "costtime" : data.request.costtime,
+                "return" : is.readInt32(0, true, 0)
+            }
+        };
+    } catch (e) {
+        throw {
+            "request" : data.request,
+            "response" : {
+                "costtime" : data.request.costtime,
+                "error" : {
+                    "code" : TarsError.CLIENT.DECODE_ERROR,
+                    "message" : e.message
+                }
+            }
+        };
+    }
+};
+
+var __tars_StatF$reportMicMsg$ER = function (data) {
+    throw {
+        "request" : data.request,
+        "response" : {
+            "costtime" : data.request.costtime,
+            "error" : data.error
+        }
+    }
+};
 
 tars.StatFProxy.prototype.reportMicMsg = function (msg, bFromClient) {
-    var _encode = function () { 
-        var os = new TarsStream.OutputStream();
-        os.writeMap(1, msg);
-        os.writeBoolean(2, bFromClient);
-        return os.getBinBuffer();
+    return this._worker.tars_invoke("reportMicMsg", __tars_StatF$reportMicMsg$EN(msg, bFromClient), arguments[arguments.length - 1]).then(__tars_StatF$reportMicMsg$DE, __tars_StatF$reportMicMsg$ER);
+};
+
+var __tars_StatF$reportSampleMsg$EN = function (msg) {
+    var os = new TarsStream.TarsOutputStream();
+    os.writeList(1, msg);
+    return os.getBinBuffer();
+};
+
+var __tars_StatF$reportSampleMsg$DE = function (data) {
+    try {
+        var is = new TarsStream.TarsInputStream(data.response.sBuffer);
+        return {
+            "request" : data.request,
+            "response" : {
+                "costtime" : data.request.costtime,
+                "return" : is.readInt32(0, true, 0)
+            }
+        };
+    } catch (e) {
+        throw {
+            "request" : data.request,
+            "response" : {
+                "costtime" : data.request.costtime,
+                "error" : {
+                    "code" : TarsError.CLIENT.DECODE_ERROR,
+                    "message" : e.message
+                }
+            }
+        };
     }
+};
 
-    var _decode = function (data) {
-        try {
-            var response = {arguments:{}};
-            var is = new TarsStream.InputStream(data.response.sBuffer);
-
-            response.costtime = data.request.costtime;
-            response.return   = is.readInt32(0, true, TarsStream.Int32);
-
-            return {request:data.request, response:response};
-        } catch (e) {
-            var response = { };
-            response.costtime      = data.request.costtime;
-            response.error         = {};
-            response.error.code    = TarsError.CLIENT.DECODE_ERROR;
-            response.error.message = e.message;
-
-            throw { request : data.request, response : response};
+var __tars_StatF$reportSampleMsg$ER = function (data) {
+    throw {
+        "request" : data.request,
+        "response" : {
+            "costtime" : data.request.costtime,
+            "error" : data.error
         }
     }
-
-    var _error = function(data) {
-        var response = {};
-        response.costtime = data.request.costtime;
-        response.error    = data.error;
-
-        throw {request:data.request, response:response};
-    }
-
-    return this._worker.tars_invoke('reportMicMsg', _encode(), arguments.length != 0?arguments[arguments.length - 1]:undefined).then(_decode, _error);
-}
+};
 
 tars.StatFProxy.prototype.reportSampleMsg = function (msg) {
-    var _encode = function () { 
-        var os = new TarsStream.OutputStream();
-        os.writeList(1, msg);
-        return os.getBinBuffer();
-    }
-
-    var _decode = function (data) {
-        try {
-            var response = {arguments:{}};
-            var is = new TarsStream.InputStream(data.response.sBuffer);
-
-            response.costtime = data.request.costtime;
-            response.return   = is.readInt32(0, true, TarsStream.Int32);
-
-            return {request:data.request, response:response};
-        } catch (e) {
-            var response = { };
-            response.costtime      = data.request.costtime;
-            response.error         = {};
-            response.error.code    = TarsError.CLIENT.DECODE_ERROR;
-            response.error.message = e.message;
-
-            throw { request : data.request, response : response};
-        }
-    }
-
-    var _error = function(data) {
-        var response = {};
-        response.costtime = data.request.costtime;
-        response.error    = data.error;
-
-        throw {request:data.request, response:response};
-    }
-
-    return this._worker.tars_invoke('reportSampleMsg', _encode(), arguments.length != 0?arguments[arguments.length - 1]:undefined).then(_decode, _error);
-}
+    return this._worker.tars_invoke("reportSampleMsg", __tars_StatF$reportSampleMsg$EN(msg), arguments[arguments.length - 1]).then(__tars_StatF$reportSampleMsg$DE, __tars_StatF$reportSampleMsg$ER);
+};
 
 
 

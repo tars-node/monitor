@@ -1,6 +1,6 @@
 {
   "name": "@tars/monitor",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "TARS 框架中用于服务监控、特性监控上报",
   "author": {
     "name": "Superzheng",
@@ -21,7 +21,7 @@
   ],
   "dependencies" : {
     "@tars/stream" : "latest",
-    "@tars/rpc": "^1.0.0",
+    "@tars/rpc": "^2.0.0",
     "@tars/utils" : "latest"
   },
   "license" : "BSD-3-Clause"

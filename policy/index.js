@@ -18,22 +18,24 @@
 
 var util = require('util');
 
-var Max = function() {};
+var Max = function() {
+	this._val = undefined;
+};
 Max.prototype.name = 'Max';
 Max.prototype.get = function() {
 	var value = this._val;
-	delete this._val;
 	if (value !== undefined) {
+		this._val = undefined;
 		return value;
 	}
 };
 Max.prototype.add = function(value) {
-	value = parseFloat(value);
-	if (!isNaN(value)) {
+	var _value = parseFloat(value);
+	if (!isNaN(_value)) {
 		if (this._val !== undefined) {
-			this._val = Math.max(this._val, value);
+			this._val = Math.max(this._val, _value);
 		} else {
-			this._val = value;
+			this._val = _value;
 		}
 		return true;
 	} else {
@@ -41,22 +43,24 @@ Max.prototype.add = function(value) {
 	}
 };
 
-var Min = function() {};
+var Min = function() {
+	this._val = undefined;
+};
 Min.prototype.name = 'Min';
 Min.prototype.get = function() {
 	var value = this._val;
-	delete this._val;
 	if (value !== undefined) {
+		this._val = undefined;
 		return value;
 	}
 };
 Min.prototype.add = function(value) {
-	value = parseFloat(value);
-	if (!isNaN(value)) {
+	var _value = parseFloat(value);
+	if (!isNaN(_value)) {
 		if (this._val !== undefined) {
-			this._val = Math.min(this._val, value);
+			this._val = Math.min(this._val, _value);
 		} else {
-			this._val = value;
+			this._val = _value;
 		}
 		return true;
 	} else {
@@ -64,13 +68,15 @@ Min.prototype.add = function(value) {
 	}
 };
 
-var Count = function() {};
+var Count = function() {
+	this._val = undefined;
+};
 Count.prototype.name = 'Count';
 Count.prototype.get = function() {
-	var value = this._val;
-	delete this._val;
-	if (value !== undefined) {
-		return value;
+	var _value = this._val;
+	if (_value !== undefined) {
+		this._val = undefined;
+		return _value;
 	}
 };
 Count.prototype.add = function() {
@@ -82,22 +88,24 @@ Count.prototype.add = function() {
 	return true;
 };
 
-var Sum = function() {};
+var Sum = function() {
+	this._val = undefined;
+};
 Sum.prototype.name = 'Sum';
 Sum.prototype.get = function() {
-	var value = this._val;
-	delete this._val;
-	if (value !== undefined) {
-		return value;
+	var _value = this._val;
+	if (_value !== undefined) {
+		this._val = undefined;
+		return _value;
 	}
 };
 Sum.prototype.add = function(value) {
-	value = parseFloat(value);
-	if (!isNaN(value)) {
+	var _value = parseFloat(value);
+	if (!isNaN(_value)) {
 		if (this._val !== undefined) {
-			this._val += value;
+			this._val += _value;
 		} else {
-			this._val = value;
+			this._val = _value;
 		}
 		return true;
 	} else {
@@ -105,35 +113,30 @@ Sum.prototype.add = function(value) {
 	}
 };
 
-var Avg = function() {};
+var Avg = function() {
+	this._sum = undefined;
+	this._count = undefined;
+};
 Avg.prototype.name = 'Avg';
 Avg.prototype.get = function() {
-	var value;
+	var _value;
 
-	if (this._sum !== undefined && this._count !== undefined) {
-		value = Math.floor(this._sum / this._count);
-	}
-
-	delete this._sum;
-	delete this._count;
-
-	if (value !== undefined) {
-		return value;
+	if (this._count !== undefined) {
+		_value = Math.floor(this._sum / this._count);
+		this._count = undefined;
+		this._sum = undefined;
+		return _value;
 	}
 };
 Avg.prototype.add = function(value) {
-	value = parseFloat(value);
-	if (!isNaN(value)) {
-		if (this._sum !== undefined) {
-			this._sum += value;
-		} else {
-			this._sum = value;
-		}
-
+	var _value = parseFloat(value);
+	if (!isNaN(_value)) {
 		if (this._count !== undefined) {
 			this._count += 1;
+			this._sum += _value;
 		} else {
 			this._count = 1;
+			this._sum = _value;
 		}
 		return true;
 	} else {
@@ -161,12 +164,12 @@ Distr.prototype.get = function() {
 	}
 };
 Distr.prototype.add = function(value) {
-	var ths = this;
+	var ths = this, _value;
 	if (this._ranges && this._results) {
-		value = parseFloat(value);
-		if (!isNaN(value)) {
+		_value = parseFloat(value);
+		if (!isNaN(_value)) {
 			this._ranges.some(function(range, index) {
-				if (value <= range) {
+				if (_value <= range) {
 					if (!ths._results[index]) {
 						ths._results[index] = 1;
 					} else {

@@ -1,0 +1,47 @@
+module tars
+{
+	///////////////////////////////////////////////////////////
+	// 通用数据结构
+	///////////////////////////////////////////////////////////
+	struct StatLog
+	{
+		0 require  string logname;
+		1 require  vector<string> content;
+		2 optional string date;
+		3 optional string flag;
+		4 optional int extend;  //扩展标志 1:表示结束包
+	};
+	struct StatValue
+	{
+		0 require string policy;
+		1 require float value;
+		2 require long count;
+	};
+	struct StatContent
+	{
+		0 require vector<string> keys;
+		1 require vector<StatValue> values;
+	};
+	struct StatOneLog
+	{
+		0 require  string logname;
+		1 require vector<string> keys;
+		2 require vector<StatValue> values;
+	};
+
+	/**
+	 *
+	 * 上报服务的接口
+	 *
+	 **/
+	interface PropertyPlusF
+	{
+
+		//通用上报接口
+		int logstat(StatLog log);
+
+		//多日志上报接口
+		int mutillogstat(vector<StatLog> logs);
+	};
+
+}; 

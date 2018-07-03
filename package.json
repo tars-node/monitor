@@ -1,6 +1,6 @@
 {
   "name": "@tars/monitor",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "TARS 框架中用于服务监控、特性监控上报",
   "author": {
     "name": "Superzheng",

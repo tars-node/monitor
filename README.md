@@ -2,10 +2,11 @@
 
 `Monitor` 是 `TARS（TUP）` 服务与特性监控上报模块。
 
-它由 2 个子模块构成：
+它由 3 个子模块构成：
 
 * 服务监控（stat）
 * 特性监控（property）
+* PP监控（propertyplus）
 
 ## 安装
 `npm install @tars/monitor`
@@ -100,6 +101,71 @@ __请注意：不要每次上报都调用 `create` 方法获取上报对象，�
 每次调用 `report` 只能上报一次的数据，并且 `value` 在一般情况下必须为数值。
 
 数据上报后，用户可在特性监控中查看上报的数据。
+
+## PP监控（propertyplus）
+
+```js
+var pp = require('@tars/monitor').propertyplus;
+```
+
+PP监控允许用户通过 `自定义维度` 与 `自定义指标` 上报特性， 它由维度名、指标值、以及对应的指标统计方法构成。
+
+PP监控相比 `特性监控` 维度更多，可自定义的范围更大。可输出类似 `服务监控` 那样多维度的服务监控。 
+
+### pp.create(name[, policies, options])
+
+调用 `create` 方法，会返回（或创建）一个上报对象，可通过调用返回对象的 `report(keys, values)` 方法进行上报。
+
+* __name__: 上报的日志名
+* __policies__: 统计方法类的数组（按顺序指定指标值的统计方法）， *默认为每个指标均采用 `POLICY.Sum` 进行统计*
+* __options__: 
+	* __notTarsLog__: 是否非 TARS 服务上报（日志名拼装方式不同，没有默认维度值）， *默认值为： `false`*
+	* __cacheKeyPolicy__: 是否开启本地缓存以提高性能， *默认值为： `false`*
+
+```js
+pp.create('name', [property.POLICY.Count, property.POLICY.Max]);
+```
+
+__`policies` 数组中对应位置的统计方法指定了上报时指标值数组对应位置的统计策略。__ 所以统计方法数应与每次上报的指标数相同，也就是 `policies.length === values.length`
+
+统计方法中除了 `POLICY.Distr` 其它均可用于此监控。
+
+如服务脚本所需上报的维度数（维度值的基数）非常大，建议开启 `cacheKeyPolicy` 以提高性能、避免内存溢出。
+
+不要每次上报都调用 `create` 方法获取上报对象，这样会造成性能损耗。
+
+### obj.report(keys, values)
+
+`pp.create` 会返回一个上报对象，可通过调用对象的 `report` 的方法进行上报。
+
+`keys` 数组中的每一项必须为 __字符__，代表 _维度名_。
+
+`values` 数组中的每一项必须为 __数值__，代表 _指标值_。
+
+__同一上报对象的维度数与指标数每次调用均要一致（顺序也相同），且指标值的顺序还需要与 `policies` 统计方法的顺序一致。__
+
+### 例子
+
+服务里面调用DB，需要对DB调用做监控，其中：
+ 
+ * 维度：DB名与对应的IP
+ * 指标：调用次数与平均耗时
+
+```js
+var obj = pp.create('db_status', [pp.POLICY.Sum, pp.POLICY.Avg]);
+```
+
+调用 DB：abc@192.168.1.1，耗时 12.2ms：
+
+```js
+obj.report(['abc', '192.168.1.1'], [1, 12.2]);
+```
+
+调用 DB：test@127.0.0.1，耗时 25.6ms：
+
+```js
+obj.report(['test', '127.0.0.1'], [1, 25.6]);
+```
 
 ## 统计方法
 

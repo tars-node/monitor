@@ -19,3 +19,4 @@
 exports.stat = require('./stat');
 exports.property = require('./property');
 exports.POLICY = require('./policy');
+exports.propertyplus = require('./propertyplus');

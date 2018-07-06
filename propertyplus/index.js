@@ -120,7 +120,7 @@ var task = function() {
 	var statlogs = new TarsStream.List(PropertyPlusF.tars.StatLog);
 
 	if (!client) {
-		client = Tars.client.stringToProxy(PropertyPlusF.tars.PropertyPlushFProxy, exports.LogAllotObj);
+		client = Tars.client.stringToProxy(PropertyPlusF.tars.PropertyPlusFProxy, exports.LogAllotObj);
 	}
 
 	Object.getOwnPropertyNames(data).forEach(function(logname) {

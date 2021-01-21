@@ -1,7 +1,8 @@
 {
   "name": "@tars/monitor",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "TARS 框架中用于服务监控、特性监控上报",
+  "types": "taf-monitor.d.ts",
   "author": {
     "name": "Superzheng",
     "email": "superzheng@tencent.com"

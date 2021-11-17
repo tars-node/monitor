@@ -25,22 +25,23 @@ var TarsStream = require('@tars/stream');
 var StatF = require('./StatFProxy');
 
 var TYPE = {
-	SUCCESS : 'success',
-	ERROR : 'error',
-	TIMEOUT : 'timeout'
+	SUCCESS: 'success',
+	ERROR: 'error',
+	TIMEOUT: 'timeout'
 };
 
-var emptyfn = function() {};
+var emptyfn = function () {};
 
-var increaseMap = function(map, key) {
+var increaseMap = function (map, key) {
 	map.set(key, map.get(key) + 1);
 };
 
-var data = {}, timer_id, client;
+var data = {},
+	timer_id, client;
 
 var ranges = [5, 10, 50, 100, 200, 500, 1000, 2000, 3000];
 
-var ReportObj = function(headers) {
+var ReportObj = function (headers) {
 	var ths = this;
 
 	this._StatMicMsgHead = new StatF.tars.StatMicMsgHead();
@@ -76,40 +77,40 @@ var ReportObj = function(headers) {
 	this._StatMicMsgBody.execCount = 0;
 
 	this._StatMicMsgBody.intervalCount = new TarsStream.Map(TarsStream.Int32, TarsStream.Int32);
-	ranges.forEach(function(range) {
+	ranges.forEach(function (range) {
 		ths._StatMicMsgBody.intervalCount.put(range, 0);
 	});
 	this._StatMicMsgBody.totalRspTime = 0;
 	this._StatMicMsgBody.maxRspTime = 0;
 	this._StatMicMsgBody.minRspTime = 0;
- 
+
 	this._bFromClient = headers.bFromClient;
 };
-ReportObj.prototype.add = function(type, time) {
+ReportObj.prototype.add = function (type, time) {
 	var ths = this;
 
-	switch(type) {
-		case TYPE.SUCCESS : {
+	switch (type) {
+		case TYPE.SUCCESS: {
 			this._StatMicMsgBody.count += 1;
 			break;
 		}
-		case TYPE.TIMEOUT : {
+		case TYPE.TIMEOUT: {
 			this._StatMicMsgBody.timeoutCount += 1;
 			return;
 		}
 		default:
-		case TYPE.ERROR : {
+		case TYPE.ERROR: {
 			this._StatMicMsgBody.execCount += 1;
 			return;
 		}
 	}
 
-	if (ranges.some(function(range) {
-		if (time <= range) {
-			increaseMap(ths._StatMicMsgBody.intervalCount, range);
-			return true;
-		}
-	})) {
+	if (!ranges.some(function (range) {
+			if (time <= range) {
+				increaseMap(ths._StatMicMsgBody.intervalCount, range);
+				return true;
+			}
+		})) {
 		increaseMap(ths._StatMicMsgBody.intervalCount, ranges[ranges.length - 1]);
 	}
 
@@ -118,17 +119,17 @@ ReportObj.prototype.add = function(type, time) {
 	this._StatMicMsgBody.totalRspTime += time;
 };
 
-var task = function() {
+var task = function () {
 	var msgList = {
-		fromClient : new TarsStream.Map(StatF.tars.StatMicMsgHead, StatF.tars.StatMicMsgBody),
-		fromServer : new TarsStream.Map(StatF.tars.StatMicMsgHead, StatF.tars.StatMicMsgBody)
+		fromClient: new TarsStream.Map(StatF.tars.StatMicMsgHead, StatF.tars.StatMicMsgBody),
+		fromServer: new TarsStream.Map(StatF.tars.StatMicMsgHead, StatF.tars.StatMicMsgBody)
 	};
 
 	if (!client) {
 		client = TarsRpc.client.stringToProxy(StatF.tars.StatFProxy, exports.StatObj);
 	}
 
-	Object.getOwnPropertyNames(data).forEach(function(key) {
+	Object.getOwnPropertyNames(data).forEach(function (key) {
 		msgList[data[key]._bFromClient ? 'fromClient' : 'fromServer'].put(data[key]._StatMicMsgHead, data[key]._StatMicMsgBody);
 	});
 
@@ -136,11 +137,15 @@ var task = function() {
 	timer_id = undefined;
 
 	if (msgList.fromClient.size() > 0) {
-		client.reportMicMsg(msgList.fromClient, true, {packetType : 1}).catch(emptyfn);
+		client.reportMicMsg(msgList.fromClient, true, {
+			packetType: 1
+		}).catch(emptyfn);
 	}
 
 	if (msgList.fromServer.size() > 0) {
-		client.reportMicMsg(msgList.fromServer, false, {packetType : 1}).catch(emptyfn);
+		client.reportMicMsg(msgList.fromServer, false, {
+			packetType: 1
+		}).catch(emptyfn);
 	}
 };
 
@@ -148,7 +153,7 @@ exports.StatObj = 'tars.tarsstat.StatObj';
 exports.reportIntervalMin = 10 * 1000;
 exports.reportInterval = 10 * 1000;
 
-exports.init = function(obj) {
+exports.init = function (obj) {
 	var TarsConfig, reportInterval;
 
 	obj = obj || process.env.TARS_CONFIG;
@@ -171,17 +176,17 @@ exports.init = function(obj) {
 	}
 };
 
-exports.report = function(headers, type, timeout) {
+exports.report = function (headers, type, timeout) {
 	var key;
 
 	if (type === TYPE.SUCCESS) {
 		assert(Number.isFinite(timeout) && timeout >= 0, 'timeout is Not a Number or less then 0');
 	}
 
-	key = Object.getOwnPropertyNames(headers).map(function(key) {
+	key = Object.getOwnPropertyNames(headers).map(function (key) {
 		return headers[key];
 	}).join('.');
-	
+
 	data[key] = data[key] || new ReportObj(headers);
 	data[key].add(type, timeout);
 
@@ -192,7 +197,7 @@ exports.report = function(headers, type, timeout) {
 	return data[key];
 };
 
-exports.stop = function() {
+exports.stop = function () {
 	if (timer_id) {
 		clearTimeout(timer_id);
 		timer_id = undefined;
